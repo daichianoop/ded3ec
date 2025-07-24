@@ -366,8 +366,8 @@ export default function HomePage() {
                         transition={{duration: 0.8, delay: 1.5}}
                         className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-16"
                     >
-                        <Link href={"https://discord.gg/JTtaH6Bd"} target={"_blank"}>                            <DisButton/>
-                        </Link>
+                    <DisButton/>
+                       
                     </motion.div>
 
                     {/* Stats */}
