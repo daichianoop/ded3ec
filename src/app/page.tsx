@@ -218,16 +218,18 @@ export default function HomePage() {
                                 </motion.button>
                             ))}
 
-                            <Tooltip content="Join our Discord community!" position="bottom">
-                                <motion.div
-                                    whileHover={{scale: 1.1}}
-                                    whileTap={{scale: 0.9}}
-                                    onClick={() => window.open("https://discord.gg/dedsec", "_blank")}
-                                    className="w-10 h-10 bg-[#7F96FF] rounded-xl flex items-center justify-center shadow-lg shadow-[#001514]/30 cursor-pointer hover:shadow-xl hover:shadow-[#001514]/50 transition-all duration-300"
-                                >
-                                    <DiscordIcon className="w-5 h-5 text-white"/>
-                                </motion.div>
-                            </Tooltip>
+                            <Link href={"https://discord.gg/JTtaH6Bd"} target={"_blank"}>
+                                <Tooltip content="Join our Discord community!" position="bottom">
+                                    <motion.div
+                                        whileHover={{scale: 1.1}}
+                                        whileTap={{scale: 0.9}}
+                                        onClick={() => window.open("https://discord.gg/dedsec", "_blank")}
+                                        className="w-10 h-10 bg-[#7F96FF] rounded-xl flex items-center justify-center shadow-lg shadow-[#001514]/30 cursor-pointer hover:shadow-xl hover:shadow-[#001514]/50 transition-all duration-300"
+                                    >
+                                        <DiscordIcon className="w-5 h-5 text-white"/>
+                                    </motion.div>
+                                </Tooltip>
+                            </Link>
                         </div>
 
                         {/* Mobile menu button */}
