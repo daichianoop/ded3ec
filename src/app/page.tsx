@@ -223,10 +223,6 @@ export default function HomePage() {
                                     <motion.div
                                         whileHover={{scale: 1.1}}
                                         whileTap={{scale: 0.9}}
-<<<<<<< HEAD
-=======
-                                        onClick={() => window.open("https://discord.gg/dedsec", "_blank")}
->>>>>>> origin/master
                                         className="w-10 h-10 bg-[#7F96FF] rounded-xl flex items-center justify-center shadow-lg shadow-[#001514]/30 cursor-pointer hover:shadow-xl hover:shadow-[#001514]/50 transition-all duration-300"
                                     >
                                         <DiscordIcon className="w-5 h-5 text-white"/>
@@ -366,8 +362,7 @@ export default function HomePage() {
                         transition={{duration: 0.8, delay: 1.5}}
                         className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-16"
                     >
-                    <DisButton/>
-                       
+                            <DisButton/>
                     </motion.div>
 
                     {/* Stats */}
