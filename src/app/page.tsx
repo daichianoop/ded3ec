@@ -30,6 +30,7 @@ const DiscordIcon = ({ className }: { className?: string }) => (
     <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0002 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9554 2.4189-2.1568 2.4189Z" />
   </svg>
 );
+
 const TelegramIcon = ({ className }: { className?: string }) => (
   <svg
     className={className}
@@ -37,15 +38,19 @@ const TelegramIcon = ({ className }: { className?: string }) => (
     fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <path d="M9.993 15.5c-.388 0-.322-.147-.456-.515l-1.14-3.766L17.25 6.75" fill="currentColor" />
+    <path
+      d="M9.993 15.5c-.388 0-.322-.147-.456-.515l-1.14-3.766L17.25 6.75"
+      fill="currentColor"
+    />
     <path
       d="M21.5 3.5L2.6 10.28c-1.03.42-1.02 1.01-.18 1.25l4.38 1.37 1.62 5.13c.2.64.35.89.91.89.58 0 .79-.27 1.1-.6l2.65-2.58 4.4 3.24c.8.44 1.38.21 1.58-.75l2.5-11.65c.3-1.28-.49-1.85-1.56-1.18z"
       fill="currentColor"
     />
   </svg>
 );
+
 const WhatsappIcon = ({ className }: { className?: string }) => (
- <svg
+  <svg
     className={className}
     viewBox="0 0 24 24"
     fill="currentColor"
@@ -55,58 +60,76 @@ const WhatsappIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// Flying Dollars Background
+// --- FIXED Flying Dollars Background ---
 const FlyingDollars = () => {
   const [dollars, setDollars] = useState<
     Array<{
       id: number;
       x: number;
-      y: number;
       size: number;
       delay: number;
       duration: number;
     }>
   >([]);
+  const [viewportHeight, setViewportHeight] = useState(0);
 
   useEffect(() => {
+    // Set the viewport height only on the client
+    setViewportHeight(window.innerHeight);
+    const handleResize = () => setViewportHeight(window.innerHeight);
+    window.addEventListener("resize", handleResize);
+
+    // Generate dollar properties
     const newDollars = Array.from({ length: 25 }, (_, i) => ({
       id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
+      x: Math.random() * 100, // horizontal position in vw
       size: Math.random() * 20 + 15,
       delay: Math.random() * 10,
       duration: Math.random() * 15 + 10,
     }));
     setDollars(newDollars);
+
+    // Cleanup resize listener
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Don't render on the server or if height isn't set yet
+  if (viewportHeight === 0) return null;
+
   return (
-    <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-      {dollars.map((dollar) => (
-        <motion.div
-          key={dollar.id}
-          className="absolute text-[#001514] opacity-[0.03] font-bold select-none"
-          style={{
-            left: `${dollar.x}%`,
-            top: `${dollar.y}%`,
-            fontSize: `${dollar.size}px`,
-          }}
-          animate={{
-            y: [0, -window.innerHeight - 100],
-            rotate: [0, 360],
-            opacity: [0, 0.03, 0],
-          }}
-          transition={{
-            duration: dollar.duration,
-            repeat: Number.POSITIVE_INFINITY,
-            delay: dollar.delay,
-            ease: "linear",
-          }}
-        >
-          $
-        </motion.div>
-      ))}
-    </div>
+<div className="fixed inset-0 z-5 overflow-hidden pointer-events-none">
+  {dollars.map((dollar) => (
+    <motion.div
+      key={dollar.id}
+      className="absolute font-bold select-none"
+      style={{
+        left: `${dollar.x}vw`,
+        fontSize: `${dollar.size}px`,
+      }}
+      initial={{ y: viewportHeight }}
+      animate={{
+        y: -100,
+        rotate: [0, Math.random() > 0.5 ? 360 : -360],
+        opacity: [0, 0.4, 0],
+        color: ['#7F96FF', '#EB5E28', '#7F96FF'], // looped color change
+      }}
+      transition={{
+        duration: dollar.duration,
+        repeat: Number.POSITIVE_INFINITY,
+        delay: dollar.delay,
+        ease: "linear",
+        color: {
+          duration: 3,
+          repeat: Infinity,
+          ease: "linear",
+        },
+      }}
+    >
+      $
+    </motion.div>
+  ))}
+</div>
+
   );
 };
 
@@ -122,7 +145,7 @@ const AnimatedGradientText = ({
 }) => {
   return (
     <motion.span
-      className={`bg-gradient-to-r bg-clip-text text-transparent ${className}`}
+      className={`bg-gradient-to-r font-bold bg-clip-text text-transparent ${className}`}
       style={{
         backgroundImage: `linear-gradient(45deg, ${colors.join(", ")})`,
         backgroundSize: "300% 300%",
@@ -156,7 +179,7 @@ const Tooltip = ({
       {children}
       <div
         className={`
-        absolute z-50 px-3 py-2 text-xs font-medium text-white 
+        absolute z-50 px-3 py-2 text-xs font-medium text-white
         bg-[#001514] border border-[white] rounded-lg shadow-xl
         opacity-0 invisible group-hover:opacity-100 group-hover:visible
         transition-all duration-300 transform
@@ -187,11 +210,27 @@ const Tooltip = ({
         {/* Arrow */}
         <div
           className={`
-          absolute w-2 h-2 bg-[#001514] border-l border-t border-[#7F96FF] transform rotate-45
-          ${position === "bottom" ? "-top-1 left-1/2 -translate-x-1/2" : ""}
-          ${position === "top" ? "-bottom-1 left-1/2 -translate-x-1/2" : ""}
-          ${position === "left" ? "-right-1 top-1/2 -translate-y-1/2" : ""}
-          ${position === "right" ? "-left-1 top-1/2 -translate-y-1/2" : ""}
+          absolute w-2 h-2 bg-[#001514] border-l border-t border-white transform
+          ${
+            position === "bottom"
+              ? "rotate-45 -top-1 left-1/2 -translate-x-1/2"
+              : ""
+          }
+          ${
+            position === "top"
+              ? "rotate-[225deg] -bottom-1 left-1/2 -translate-x-1/2 !border-t-0 !border-l-0 border-b border-r"
+              : ""
+          }
+          ${
+            position === "left"
+              ? "rotate-[135deg] -right-1 top-1/2 -translate-y-1/2 !border-l-0 !border-b-0 border-t border-r"
+              : ""
+          }
+          ${
+            position === "right"
+              ? "rotate-[-45deg] -left-1 top-1/2 -translate-y-1/2 !border-t-0 !border-r-0 border-b border-l"
+              : ""
+          }
         `}
         />
       </div>
@@ -290,47 +329,51 @@ export default function HomePage() {
 
               <div className="flex items-center gap-3">
                 <Link href={"https://discord.gg/JTtaH6Bd"} target={"_blank"}>
-                <Tooltip
-                  content="Join our Discord community!"
-                  position="bottom"
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="w-10 h-10 bg-[#7F96FF] rounded-xl flex items-center justify-center shadow-lg shadow-[#001514]/30 cursor-pointer hover:shadow-xl hover:shadow-[#001514]/50 transition-all duration-300"
+                  <Tooltip
+                    content="Join our Discord community!"
+                    position="bottom"
                   >
-                    <DiscordIcon className="w-5 h-5 text-white" />
-                  </motion.div>
-                </Tooltip>
-              </Link>
-              <Link href={"https://discord.gg/JTtaH6Bd"} target={"_blank"}>
-                <Tooltip
-                  content="Join our Whatsapp community!"
-                  position="bottom"
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="w-10 h-10 bg-[#7F96FF] rounded-xl flex items-center justify-center shadow-lg shadow-[#001514]/30 cursor-pointer hover:shadow-xl hover:shadow-[#001514]/50 transition-all duration-300"
+                    >
+                      <DiscordIcon className="w-5 h-5 text-white" />
+                    </motion.div>
+                  </Tooltip>
+                </Link>
+                {/* --- FIXED WHATSAPP LINK --- */}
+                <Link
+                  href={"https://chat.whatsapp.com/YOUR_GROUP_ID"} // Replace with your actual WhatsApp group link
+                  target={"_blank"}
                 >
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="w-10 h-10 bg-[#25D366] rounded-xl flex items-center justify-center shadow-lg shadow-[#001514]/30 cursor-pointer hover:shadow-xl hover:shadow-[#001514]/50 transition-all duration-300"
+                  <Tooltip
+                    content="Join our Whatsapp community!"
+                    position="bottom"
                   >
-                    <WhatsappIcon className="w-5 h-5 text-white" />
-                  </motion.div>
-                </Tooltip>
-              </Link>
-              <Link href={"https://t.me/ded3ec_deals"} target={"_blank"}>
-                <Tooltip
-                  content="Join our Telegram community!"
-                  position="bottom"
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="w-10 h-10 bg-[#24A1DE] rounded-xl flex items-center justify-center shadow-lg shadow-[#001514]/30 cursor-pointer hover:shadow-xl hover:shadow-[#001514]/50 transition-all duration-300"
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="w-10 h-10 bg-[#25D366] rounded-xl flex items-center justify-center shadow-lg shadow-[#001514]/30 cursor-pointer hover:shadow-xl hover:shadow-[#001514]/50 transition-all duration-300"
+                    >
+                      <WhatsappIcon className="w-5 h-5 text-white" />
+                    </motion.div>
+                  </Tooltip>
+                </Link>
+                <Link href={"https://t.me/ded3ec_deals"} target={"_blank"}>
+                  <Tooltip
+                    content="Join our Telegram community!"
+                    position="bottom"
                   >
-                    <TelegramIcon className="w-5 h-5 text-white" />
-                  </motion.div>
-                </Tooltip>
-              </Link>
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="w-10 h-10 bg-[#24A1DE] rounded-xl flex items-center justify-center shadow-lg shadow-[#001514]/30 cursor-pointer hover:shadow-xl hover:shadow-[#001514]/50 transition-all duration-300"
+                    >
+                      <TelegramIcon className="w-5 h-5 text-white" />
+                    </motion.div>
+                  </Tooltip>
+                </Link>
               </div>
             </div>
 
@@ -388,7 +431,7 @@ export default function HomePage() {
       >
         <div className="max-w-7xl mx-auto text-center z-10">
           {/* Floating Elements */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none hidden">
             {Array.from({ length: 6 }).map((_, i) => (
               <motion.div
                 key={i}
@@ -430,7 +473,7 @@ export default function HomePage() {
             >
               <h2 className="text-xl sm:text-3xl lg:text-4xl font-bold mb-4">
                 <AnimatedGradientText
-                  colors={["#BFC0C0", "#EDF7F6", "#001514"]}
+                  colors={["#7F96FF", "#EB5E28"]}
                 >
                   Ultimate Deals & Offers
                 </AnimatedGradientText>
@@ -448,7 +491,7 @@ export default function HomePage() {
                   <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-[#7F96FF]" />
                 </motion.div>
                 <span className="font-semibold text-[#EDF7F6]">
-                  Discord Server
+                  We are on Discord, Telegram and Whatsapp
                 </span>
                 <motion.div
                   animate={{ rotate: [360, 0] }}
@@ -472,7 +515,7 @@ export default function HomePage() {
             className="text-base sm:text-xl lg:text-2xl mb-12 text-[#EDF7F6] max-w-5xl mx-auto leading-relaxed"
           >
             Join{" "}
-            <AnimatedGradientText colors={["#001514", "#7F96FF"]}>
+            <AnimatedGradientText colors={["#EB5E28", "#7F96FF"]}>
               thousands
             </AnimatedGradientText>{" "}
             of savvy shoppers discovering exclusive deals, limited-time offers,
@@ -588,7 +631,7 @@ export default function HomePage() {
               <AnimatedGradientText>About DedSec</AnimatedGradientText>
             </h2>
 
-            <div className="space-y-6 sm:space-y-8 text-base sm:text-lg text-[#EDF7F6] leading-relaxed mb-12">
+            <div className="space-y-2 font-bold sm:space-y-8 text-base sm:text-lg text-[#EDF7F6] leading-relaxed mb-12">
               <motion.p
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
