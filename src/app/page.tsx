@@ -15,7 +15,7 @@ import {
   Bell,
   Crown,
 } from "lucide-react";
-import DisButton from "@/app/components/DisButton";
+//import DisButton from "@/app/components/DisButton"; 
 import TeleButton from "@/app/components/TeleButton";
 import WaButton from "@/app/components/WaButton";
 
@@ -328,6 +328,8 @@ export default function HomePage() {
               ))}
 
               <div className="flex items-center gap-3">
+
+                {/* --- DISCORD DEPRECATED --- 
                 <Link href={"https://discord.gg/JTtaH6Bd"} target={"_blank"}>
                   <Tooltip
                     content="Join our Discord community!"
@@ -342,9 +344,13 @@ export default function HomePage() {
                     </motion.div>
                   </Tooltip>
                 </Link>
+
+                */}
+
+
                 {/* --- FIXED WHATSAPP LINK --- */}
                 <Link
-                  href={"https://chat.whatsapp.com/YOUR_GROUP_ID"} // Replace with your actual WhatsApp group link
+                  href={"https://whatsapp.com/channel/0029VbAzecJ3rZZbc9Yfsj3F "} // Replace with your actual WhatsApp group link
                   target={"_blank"}
                 >
                   <Tooltip
@@ -415,7 +421,7 @@ export default function HomePage() {
                   </motion.button>
                 ))}
                 <div className="px-4 pt-2 flex-col gap-3 flex items-center">
-                  <DisButton />
+                
                   <TeleButton />
                   <WaButton />
                 </div>
@@ -491,7 +497,7 @@ export default function HomePage() {
                   <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-[#7F96FF]" />
                 </motion.div>
                 <span className="font-semibold text-[#EDF7F6]">
-                  We are on Discord, Telegram and Whatsapp
+                  We are on Telegram and Whatsapp.
                 </span>
                 <motion.div
                   animate={{ rotate: [360, 0] }}
@@ -529,12 +535,12 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 1.5 }}
             className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-16"
           >
-            <DisButton />
+    
             <TeleButton />
             <WaButton />
           </motion.div>
 
-          {/* Stats */}
+          {/* Stats Deprecated
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -560,6 +566,9 @@ export default function HomePage() {
               </motion.div>
             ))}
           </motion.div>
+          */}
+
+
         </div>
       </section>
 
@@ -677,7 +686,7 @@ export default function HomePage() {
             >
               <div className="grid place-content-center">
                 <div className="flex flex-col gap-3 items-center sm:flex-row sm:items-center sm:gap-4">
-                  <DisButton />
+             
                   <TeleButton />
                   <WaButton />
                 </div>
